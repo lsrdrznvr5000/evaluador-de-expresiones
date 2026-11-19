@@ -1,6 +1,6 @@
 class Nodo{
-    constructor(){
-        this.dato = this.dato;
+    constructor(dato){
+        this.dato = dato;
         this.anterior = null;
         this.siguiente = null;
         this.hder = null;
@@ -10,14 +10,14 @@ class Nodo{
 
 class Expression{
     constructor(){
-        this.primero = null;
+        this.raiz = null;
     }
 
     agregar(nuevo) {
-        if (this.primero === null){
-            this.primero = nuevo;
+        if (this.raiz === null){
+            this.raiz = nuevo;
         } else{
-            this._agregate(nuevo, this.raiz);
+            this._agregate(nuevo, this.primero);
         }
     }
 
@@ -37,38 +37,44 @@ class Expression{
         }
     }
 
-    evaluar(){
+    _evaluar(hola) {
+        let nodo = this.raiz;
+        while (nodo !== null) {
+            if (hola === nodo.dato) {
+                const izq = nodo.anterior;
+                const der = nodo.siguiente;
 
-    }
-    
-    _extraer(dato){
-        const datoExtr = dato;
-        dato.anterior.siguiente = dato.siguiente;
-        dato.siguiente.anterior = dato.anterior;
-        return datoExtr;
-    }
-
-    /*
-    agregar(nuevo){
-        if(this.primero = null) {
-            this.primero = nuevo;
-            this.primero.siguiente = this.primero;
-            this.primero.anterior = this.primero;
-        } else if (this.primero.siguiente = this.primero) {
-            this.primero.siguiente = nuevo;
-            nuevo.siguiente = this.primero.siguiente;
-            this.primero.anterior = nuevo;
-            nuevo.anterior = this.primero;
-        } else {
-            let aux = this.primero;
-            do {
-                aux = aux.siguiente;
-            } while (aux.siguiente !== this.primero)
-            aux.siguiente = nuevo;
-            nuevo.anterior = aux;
-            nuevo.siguiente = this.primero;
+                if (izq !== null && der !== null) {
+                    nodo.hizq = izq;
+                    nodo.hder = der;
+                    this._extraer(izq);
+                    this._extraer(der);
+                    izq.anterior = null;
+                    izq.siguiente = null;
+                    der.anterior = null;
+                    der.siguiente = null;
+                    nodo = nodo.siguiente;
+                } else {
+                    nodo = nodo.siguiente;
+                }
+            } else {
+                nodo = nodo.siguiente;
+            }
         }
     }
-    */
-
+    
+    _extraer(nodo) {
+        if (nodo === this.raiz) {
+            this.raiz = null;
+        } else if (nodo === this.raiz) {
+            this.raiz = nodo.siguiente;
+            this.raiz.anterior = null;
+        } else if (nodo === this.ultimo) {
+            this.ultimo = nodo.anterior;
+            this.ultimo.siguiente = null;
+        } else {
+            nodo.anterior.siguiente = nodo.siguiente;
+            nodo.siguiente.anterior = nodo.anterior;
+        }
+    }
 }
