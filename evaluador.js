@@ -11,13 +11,14 @@ class Nodo{
 class Expression{
     constructor(){
         this.raiz = null;
+        this.ultimo = null;
     }
 
     agregar(nuevo) {
         if (this.raiz === null){
             this.raiz = nuevo;
         } else{
-            this._agregate(nuevo, this.primero);
+            this._agregate(nuevo, this.raiz);
         }
     }
 
@@ -64,8 +65,9 @@ class Expression{
     }
     
     _extraer(nodo) {
-        if (nodo === this.raiz) {
+        if (nodo === this.raiz && nodo === this.ultimo) {
             this.raiz = null;
+            this.ultimo = null;
         } else if (nodo === this.raiz) {
             this.raiz = nodo.siguiente;
             this.raiz.anterior = null;
@@ -76,5 +78,12 @@ class Expression{
             nodo.anterior.siguiente = nodo.siguiente;
             nodo.siguiente.anterior = nodo.anterior;
         }
+    }
+
+    preOrder(nodo) {
+        if (nodo === null || nodo === undefined) return;
+        console.log(nodo.dato);
+        this.preOrder(nodo.hizq);
+        this.preOrder(nodo.hder);
     }
 }
