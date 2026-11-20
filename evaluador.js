@@ -1,89 +1,80 @@
-class Nodo{
-    constructor(dato){
+class Nodo {
+    constructor(dato) {
         this.dato = dato;
         this.anterior = null;
         this.siguiente = null;
-        this.hder = null;
         this.hizq = null;
+        this.hder = null;
     }
 }
 
-class Expression{
-    constructor(){
+class Expresiones {
+    constructor() {
         this.raiz = null;
         this.ultimo = null;
     }
 
     agregar(nuevo) {
-        if (this.raiz === null){
+        if (this.raiz === null) {
             this.raiz = nuevo;
-        } else{
-            this._agregate(nuevo, this.raiz);
+            this.ultimo = nuevo;
+        } else {
+            nuevo.anterior = this.ultimo;
+            this.ultimo.siguiente = nuevo;
+            this.ultimo = nuevo;
         }
     }
 
-    _agregate(nuevo, nodor) {
-        if (nuevo.codigo > nodor.codigo) {
-            if(nodor.hder === null) {
-                nodor.hder = nuevo;
-            } else {
-                this._agregate(nuevo, nodor.hder);
-            }
-        } else{
-            if (nodor.hiz === null) {
-                nodor.hiz = nuevo;
-            } else {
-                this._agregate(nuevo, nodor.hiz);
-            }
-        }
+    evaluar() {
+        this._evaluarPass(['*', '/']);
+        this._evaluarPass(['+', '-']);
     }
 
-    _evaluar(hola) {
+    _evaluarPass(signo) {
         let nodo = this.raiz;
         while (nodo !== null) {
-            if (hola === nodo.dato) {
+            if (signo.includes(nodo.dato)) {
                 const izq = nodo.anterior;
                 const der = nodo.siguiente;
 
                 if (izq !== null && der !== null) {
-                    nodo.hizq = izq;
-                    nodo.hder = der;
                     this._extraer(izq);
                     this._extraer(der);
-                    izq.anterior = null;
-                    izq.siguiente = null;
-                    der.anterior = null;
-                    der.siguiente = null;
-                    nodo = nodo.siguiente;
-                } else {
-                    nodo = nodo.siguiente;
+
+                    nodo.hizq = izq;
+                    nodo.hder = der;
                 }
-            } else {
-                nodo = nodo.siguiente;
             }
+            nodo = nodo.siguiente;
         }
     }
-    
+
     _extraer(nodo) {
-        if (nodo === this.raiz && nodo === this.ultimo) {
-            this.raiz = null;
-            this.ultimo = null;
-        } else if (nodo === this.raiz) {
+        if (nodo === this.raiz) {
             this.raiz = nodo.siguiente;
-            this.raiz.anterior = null;
+            if (this.raiz !== null) {
+                this.raiz.anterior = null;
+            }
         } else if (nodo === this.ultimo) {
             this.ultimo = nodo.anterior;
-            this.ultimo.siguiente = null;
+            if (this.ultimo !== null) {
+                this.ultimo.siguiente = null;
+            }
         } else {
             nodo.anterior.siguiente = nodo.siguiente;
             nodo.siguiente.anterior = nodo.anterior;
         }
     }
 
-    preOrder(nodo) {
-        if (nodo === null || nodo === undefined) return;
-        console.log(nodo.dato);
-        this.preOrder(nodo.hizq);
-        this.preOrder(nodo.hder);
+    preOrder() {
+        this._preOrder(this.raiz);
+    }
+
+    _preOrder(nodo) {
+        if (nodo !== null) {
+            console.log(nodo.dato);
+            this._preOrder(nodo.hizq);
+            this._preOrder(nodo.hder);
+        }
     }
 }
